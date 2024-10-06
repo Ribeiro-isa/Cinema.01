@@ -1,0 +1,251 @@
+openapi: 3.0.0
+info:
+  title: Cinema API
+  description: API para gerenciar cinemas e filmes
+  version: 1.0.0
+
+paths:
+  /cinemas:
+    get:
+      summary: Listar todos os cinemas
+      operationId: getCinemas
+      responses:
+        '200':
+          description: Lista de cinemas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cinema'
+
+    post:
+      summary: Criar um novo cinema
+      operationId: createCinema
+      requestBody:
+        description: Cinema a ser criado
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CinemaInput'
+      responses:
+        '201':
+          description: Cinema criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cinema'
+
+  /cinemas/{cinemaId}:
+    get:
+      summary: Obter um cinema específico
+      operationId: getCinemaById
+      parameters:
+        - name: cinemaId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Cinema encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cinema'
+        '404':
+          description: Cinema não encontrado
+
+    put:
+      summary: Atualizar um cinema
+      operationId: updateCinema
+      parameters:
+        - name: cinemaId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Cinema a ser atualizado
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CinemaInput'
+      responses:
+        '200':
+          description: Cinema atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cinema'
+
+    delete:
+      summary: Deletar um cinema
+      operationId: deleteCinema
+      parameters:
+        - name: cinemaId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Cinema deletado com sucesso
+
+  /cinemas/{cinemaId}/filmes:
+    get:
+      summary: Listar todos os filmes de um cinema
+      operationId: getFilmesByCinema
+      parameters:
+        - name: cinemaId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de filmes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Filme'
+
+    post:
+      summary: Criar um novo filme em um cinema
+      operationId: createFilmeInCinema
+      parameters:
+        - name: cinemaId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Filme a ser criado
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilmeInput'
+      responses:
+        '201':
+          description: Filme criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Filme'
+
+  /filmes/{filmeId}:
+    get:
+      summary: Obter um filme específico
+      operationId: getFilmeById
+      parameters:
+        - name: filmeId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Filme encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Filme'
+        '404':
+          description: Filme não encontrado
+
+    put:
+      summary: Atualizar um filme
+      operationId: updateFilme
+      parameters:
+        - name: filmeId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Filme a ser atualizado
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilmeInput'
+      responses:
+        '200':
+          description: Filme atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Filme'
+
+    delete:
+      summary: Deletar um filme
+      operationId: deleteFilme
+      parameters:
+        - name: filmeId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Filme deletado com sucesso
+
+components:
+  schemas:
+    Cinema:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        localizacao:
+          type: string
+        filmes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Filme'
+
+    CinemaInput:
+      type: object
+      required:
+        - nome
+        - localizacao
+      properties:
+        nome:
+          type: string
+        localizacao:
+          type: string
+
+    Filme:
+      type: object
+      properties:
+        id:
+          type: integer
+        titulo:
+          type: string
+        duracao:
+          type: integer
+        classificacao:
+          type: string
+        cinemaId:
+          type: integer
+
+    FilmeInput:
+      type: object
+      required:
+        - titulo
+        - duracao
+        - classificacao
+      properties:
+        titulo:
+          type: string
+        duracao:
+          type: integer
+        classificacao:
+          type: string
